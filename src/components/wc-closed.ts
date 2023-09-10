@@ -1,6 +1,7 @@
 import { consume } from "@lit-labs/context";
 import { LitElement, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import "../components/buttons/close-button";
 import {
   Colors,
   Messages,
@@ -9,9 +10,8 @@ import {
   messageContext,
   stateContext,
 } from "../store/store-context";
-import send from "../assets/send.svg";
-import "../components/buttons/close-button";
 import "./mascot";
+import "./wc-svg";
 
 @customElement("wc-closed")
 export class WcClosed extends LitElement {
@@ -32,7 +32,7 @@ export class WcClosed extends LitElement {
     if (!!!localStorage.getItem("clientId")) {
       setTimeout(() => {
         this.showIntro = true;
-      }, 3600);
+      }, 1000);
     }
     this.shadowRoot?.addEventListener("close-chat", () => {
       this.showIntro = false;
@@ -51,7 +51,7 @@ export class WcClosed extends LitElement {
       bubbles: true,
       composed: true,
     });
-     
+
     this.dispatchEvent(event);
   }
 
@@ -69,15 +69,29 @@ export class WcClosed extends LitElement {
                     class="start-chat"
                     style="background-color: ${this.colors
                       ?.primarycolor}; color: ${this.colors?.textcolor};"
-                      @click=${() => this.handleStartChat()}
+                    @click=${() => this.handleStartChat()}
                   >
-                    <img
+                    <wc-svg
                       width="15"
                       height="15"
-                      src="${send}"
-                      alt="message"
-                      style="transform: rotate(45deg); margin-right: 10px; margin-bottom: -2px;"
-                    />
+                      style="transform: rotate(45deg); margin-right: 10px; margin-bottom: -6px;"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#FFF"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-send"
+                      >
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                      </svg>
+                    </wc-svg>
                     Talk to us
                   </button>
                 </div>
@@ -128,7 +142,7 @@ export class WcClosed extends LitElement {
       align-items: flex-end;
     }
     .chat-container {
-      background-color: white;
+      background-color: transparent;
       border: none;
       border-radius: 31px;
       display: flex;

@@ -96,7 +96,7 @@ class WcThread extends LitElement {
     });
     if (!!this._ticket) {
       this._ticket = JSON.parse(this._ticket)?.data;
-      this.ticketId = this._ticket?.ticketId;
+      this.ticketId = this._ticket?.id;
       this.ticketThread = [
         {
           message: this._ticket?.subject,

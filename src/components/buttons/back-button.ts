@@ -1,6 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import back from "../../assets/back.svg";
+import "../wc-svg";
 
 @customElement("back-button")
 class BackButton extends LitElement {
@@ -18,7 +18,9 @@ class BackButton extends LitElement {
   protected render(): unknown {
     return html`
       <button class="back-button" @click="${this.handleBack}">
-        <img src="${back}" alt="back" />
+        <wc-svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f2f2f2" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </wc-svg>
       </button>
     `;
   }

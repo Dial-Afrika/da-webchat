@@ -1,7 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import x from "../../assets/x.svg";
-
+import "../wc-svg";
 @customElement("close-button")
 class CloseButton extends LitElement {
   closeChat() {
@@ -15,7 +14,23 @@ class CloseButton extends LitElement {
   protected render(): unknown {
     return html`
       <button class="close-button" @click="${this.closeChat}">
-        <img src="${x}" alt="chat" />
+        <wc-svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#797979"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="feather feather-x"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </wc-svg>
       </button>
     `;
   }

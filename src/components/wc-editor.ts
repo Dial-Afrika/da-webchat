@@ -1,7 +1,6 @@
 import { consume } from "@lit-labs/context";
 import { LitElement, PropertyValueMap, css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import paperclip from "../assets/paperclip.svg";
 import { initializeChat, sendMessage } from "../functions/functions";
 import {
   Colors,
@@ -12,7 +11,7 @@ import {
 
 @customElement("wc-editor")
 class WcEditor extends LitElement {
-  @property({ type: String }) ticketId = "";
+  @property({ type: String }) ticketId = localStorage.getItem("ticketId") ?? "";
   @state() inputRef: HTMLTextAreaElement | null = null;
 
   @consume({ context: colorContext, subscribe: true })
@@ -26,12 +25,14 @@ class WcEditor extends LitElement {
     const values = new FormData(event.target as HTMLFormElement);
     const message = values.get("message") as string;
     (this.inputRef as HTMLTextAreaElement).value = "";
-    if (this.ticketId !== "") {
+    if (localStorage.getItem("ticketId") || this.ticketId !== "") {
       sendMessage(
         `${this.state?.BASE_URL}`,
         `${this.state?.orgId}`,
         message,
-        this.ticketId
+        this.ticketId !== ""
+          ? this.ticketId
+          : localStorage.getItem("ticketId") ?? ""
       )
         .then((res: any) => {
           console.log("message sent", res);
@@ -46,7 +47,7 @@ class WcEditor extends LitElement {
           this.dispatchEvent(onMessage);
         })
         .catch((err: any) => {
-          console.log("message not sent",err);
+          console.log("message not sent", err);
         });
     } else {
       initializeChat(`${this.state?.BASE_URL}`, `${this.state?.orgId}`, {
@@ -55,7 +56,6 @@ class WcEditor extends LitElement {
         ticketMessage: message,
       })
         .then((res: any) => {
-
           const onMessage = new CustomEvent("onMessage", {
             bubbles: true,
             composed: true,
@@ -99,9 +99,6 @@ class WcEditor extends LitElement {
               required
             ></textarea>
             <div class="button-container">
-              <button class="gray">
-                <img width="15" height="15" src="${paperclip}" alt="attach" />
-              </button>
               <button
                 type="submit"
                 style="background-color:${this.colors

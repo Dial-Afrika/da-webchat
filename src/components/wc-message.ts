@@ -1,9 +1,9 @@
 import { consume } from "@lit-labs/context";
 import { LitElement, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import user from "../assets/user.svg";
 import { getMoment, splitInfoAndLink } from "../functions/functions";
 import { Colors, colorContext } from "../store/store-context";
+import './wc-svg';
 @customElement("wc-message")
 export class WcMessage extends LitElement {
   @property({ type: String }) direction = "incoming";
@@ -58,7 +58,23 @@ export class WcMessage extends LitElement {
           style="background-color: ${this.colors
             ?.textcolor}; current-color: ${this.colors?.primarycolor};"
         >
-          <img width="15" height="15" src="${user}" alt="user" />
+          <wc-svg width="10" height="10">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#0D724B"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-user"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </wc-svg>
         </div>
       </div>
     `;
@@ -74,10 +90,13 @@ export class WcMessage extends LitElement {
           "
         >
           <p>${splitInfoAndLink(this.message)[0]}</p>
-          ${splitInfoAndLink(this.message)[1] !== "" ?
-          html`<a href="${splitInfoAndLink(this.message)[1]}" target="_blank"
-            >Track Ticket</a
-          >`:html``}
+          ${splitInfoAndLink(this.message)[1] !== ""
+            ? html`<a
+                href="${splitInfoAndLink(this.message)[1]}"
+                target="_blank"
+                >Track Ticket</a
+              >`
+            : html``}
         </div>
       </div>
     `;
