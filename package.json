@@ -1,7 +1,7 @@
 {
   "name": "da-web-chat",
   "private": false,
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "da-web-chat.es.js",
   "module": "da-web-chat.es.js",
   "types": "da-web-chat.d.ts",
