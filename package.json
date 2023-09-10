@@ -2,19 +2,9 @@
   "name": "da-web-chat",
   "private": false,
   "version": "2.0.0",
-  "main": "dist/da-web-chat.es.js",
-  "exports": {
-    ".": {
-      "import": "./dist/da-web-chat.es.js",
-      "require": "./dist/da-web-chat.js"
-    },
-    "./package.json": "./package.json",
-    "./dist/da-web-chat.es.js": "./dist/da-web-chat.es.js",
-    "./dist/da-web-chat.js": "./dist/da-web-chat.js",
-    "./dist/da-web-chat.d.ts": "./dist/da-web-chat.d.ts"
-  },
-  "module": "./dist/da-web-chat.es.js",
-  "types": "./dist/da-web-chat.d.ts",
+  "main": "da-web-chat.es.js",
+  "module": "da-web-chat.es.js",
+  "types": "da-web-chat.d.ts",
   "files": [
     "dist",
     "types"

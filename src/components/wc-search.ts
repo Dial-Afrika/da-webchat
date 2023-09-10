@@ -72,7 +72,7 @@ class WcSearch extends LitElement {
       detail: {
         route: `/${faq?.id}`,
         page: "faq",
-        faq: faq,
+        data: faq,
       },
       bubbles: true,
       composed: true,

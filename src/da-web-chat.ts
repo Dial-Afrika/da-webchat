@@ -3,7 +3,6 @@ import { LitElement, PropertyValueMap, css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 import { choose } from "lit/directives/choose.js";
-import { Socket, io } from "socket.io-client";
 import message from "./assets/message-square.svg";
 import x from "./assets/x.svg";
 import "./components/wc-closed";
@@ -25,7 +24,6 @@ export class DaWebChat extends LitElement {
   @property() apikey = "";
 
   @state() greetings = "Hi";
-  @state() message = "Welcome to Dialafrika Support, We're here to help!";
   @state() BASE_URL = "https://chatdesk-prod.dialafrika.com/";
   @state() ID_URL = "https://apiprod.dialafrika.com/organisation/";
   @state() organizationId = "";
@@ -33,7 +31,6 @@ export class DaWebChat extends LitElement {
   @state() orgName: string = "";
   @state() page = "home";
   @state() homePage = "home";
-  @state() socket: Socket | null = null;
 
   @provide({ context: colorContext })
   colors: Colors = new Colors().setColors(this.primarycolor, this.textcolor);
@@ -60,8 +57,12 @@ export class DaWebChat extends LitElement {
       })
       .then(() => {
         getPrompt(this.BASE_URL, this.organizationId).then((res) => {
-          this.message = res?.data?.message;
-          this.messages = new Messages(`${this.greetings} ${localStorage.getItem("contactName")??"there"},`, res?.data.data?.message);
+          this.messages = new Messages(
+            `${this.greetings} ${
+              localStorage.getItem("contactName") ?? "there"
+            },`,
+            res?.data.data?.message
+          );
           this.state = new State({
             promptMessage: res?.data?.message,
             hasPrompted: true,

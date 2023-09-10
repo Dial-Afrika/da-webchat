@@ -2,7 +2,14 @@ import { consume } from "@lit-labs/context";
 import { LitElement, PropertyValueMap, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { map } from "lit/directives/map.js";
-import { getMoment, getTicket, getTickets } from "../functions/functions";
+import {
+  getLastMessage,
+  getMoment,
+  getTicket,
+  getTickets,
+  sortArray,
+  truncateString,
+} from "../functions/functions";
 import { State, stateContext } from "../store/store-context";
 import "./wc-avatar";
 
@@ -35,7 +42,7 @@ export class WcTicketHistory extends LitElement {
       this.state?.orgId as string,
       ticket.id
     ).then((res: any) => {
-      const onOpenFaqs = new CustomEvent("onRoute", {
+      const onOpenTicket = new CustomEvent("onRoute", {
         detail: {
           route: `/${ticket?.id}`,
           page: "view_ticket",
@@ -44,7 +51,7 @@ export class WcTicketHistory extends LitElement {
         bubbles: true,
         composed: true,
       });
-      this.dispatchEvent(onOpenFaqs);
+      this.dispatchEvent(onOpenTicket);
     });
   }
   protected render(): unknown {
@@ -52,23 +59,26 @@ export class WcTicketHistory extends LitElement {
       <div class="ticket-container">
         <div class="ticket-threads" id="thread">
           ${map(
-            this.tickets.sort((a, b) => {
-              if (a.updated_at > b.updated_at) {
-                return -1;
-              } else if (a.updated_at < b.updated_at) {
-                return 1;
-              } else {
-                return 0;
-              }
-            }),
+            sortArray(this.tickets, "updated_at", "desc"),
             (ticket: any) => html`
               <div class="ticket" @click=${() => this.handleViewTicket(ticket)}>
                 <div class="ticket-avatar">
                   <wc-avatar avatar=${ticket.agent ?? "Agent"}></wc-avatar>
                 </div>
                 <div class="ticket-details">
-                  <p class="ticket-subject">${ticket.subject}</p>
-                  <p class="ticket-date">${getMoment(ticket.updated_at)}</p>
+                  <p class="ticket-subject">
+                    ${truncateString(
+                      getLastMessage(ticket.threads)?.message ?? ticket.subject,
+                      40
+                    )}
+                  </p>
+                  <p class="ticket-date">
+                    ${getMoment(
+                      sortArray(ticket.threads, "created_at", "asc")[
+                        ticket.threads.length - 1
+                      ].updated_at
+                    )}
+                  </p>
                 </div>
               </div>
             `
@@ -131,14 +141,14 @@ export class WcTicketHistory extends LitElement {
       color: currentColor;
     }
     .ticket-subject {
-      font-size: 1rem;
+      font-size: 12px;
       font-weight: 600;
       color: #3a3a3a;
     }
     .ticket-date {
       font-size: 10px;
       font-weight: 300;
-      color: #6F6F6F;
+      color: #6f6f6f;
     }
   `;
 }

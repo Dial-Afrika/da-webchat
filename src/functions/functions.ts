@@ -107,3 +107,49 @@ export const splitInfoAndLink = (text: string): [string, string] => {
     return [text, ""];
   }
 };
+
+export const sortArray = (array: any[], key: string, order: string) => {
+  return array.sort((a, b) => {
+    if (order === "asc") {
+      if (a[key] > b[key]) {
+        return 1;
+      } else if (a[key] < b[key]) {
+        return -1;
+      } else {
+        return 0;
+      }
+    } else if (order === "desc") {
+      if (a[key] > b[key]) {
+        return -1;
+      } else if (a[key] < b[key]) {
+        return 1;
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  });
+};
+
+export function truncateString(inputString: string, maxLength: number) {
+  if (inputString.length <= maxLength) {
+    return inputString;
+  }
+  const truncated = inputString.substring(0, maxLength);
+  if (truncated[truncated.length - 1] !== inputString[maxLength]) {
+    return truncated + "...";
+  } else {
+    return truncated;
+  }
+}
+
+export function getLastMessage(threads: any[]) {
+  threads = threads.filter(
+    (thread) =>
+      !thread.message.toLowerCase().includes("track your ticket") &&
+      !thread.message.toLowerCase().includes("no live agents")
+  );
+  threads = sortArray(threads, "created_at", "asc");
+  return threads[threads.length - 1]??undefined;
+}

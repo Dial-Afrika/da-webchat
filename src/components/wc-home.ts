@@ -1,5 +1,5 @@
 import { consume } from "@lit-labs/context";
-import { LitElement, PropertyValueMap, css, html } from "lit";
+import { LitElement, css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { choose } from "lit/directives/choose.js";
 import logoicon from "../assets/logoicon.svg";
@@ -33,7 +33,8 @@ export class WcHome extends LitElement {
   @state() hasClientId = !!localStorage.getItem("clientId");
   @state() routes: string[] = [];
   @state() route = "/";
-  @state() selectedItem: any = {};
+  @state() selectedTicket: any = {};
+  @state() selectedFaq: any = {};
 
   @consume({ context: stateContext, subscribe: true })
   private state!: State;
@@ -52,10 +53,8 @@ export class WcHome extends LitElement {
     this.page = page;
     this.route = route;
   }
-  protected firstUpdated(
-    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
-  ): void {
-    super.firstUpdated(_changedProperties);
+  connectedCallback(): void {
+    super.connectedCallback();
     this.shadowRoot?.addEventListener("onSearch", () => {
       this.hasSearch = true;
     });
@@ -74,7 +73,10 @@ export class WcHome extends LitElement {
       let { route, page, ...rest } = e.detail;
       this.route = route;
       this.page = page;
-      this.selectedItem = rest;
+      console.log("onRoute", e.detail);
+
+      if (page === "faq") this.selectedFaq = {...rest};
+      if (page === "view_ticket") this.selectedTicket = {...rest};
     });
     this.shadowRoot?.addEventListener("onFaqs", () => {
       this.hasFaqs = true;
@@ -86,10 +88,11 @@ export class WcHome extends LitElement {
       getTicket(
         `${this.state?.BASE_URL}`,
         `${this.state?.orgId}`,
-        this.selectedItem?.data?.id
+        this.selectedTicket?.data?.id
       )
         .then((res: any) => {
-          this.selectedItem = res;
+          console.log("ticket", res);
+          this.selectedTicket.data = res;
           this.page = "view_ticket";
           this.requestUpdate();
         })
@@ -98,6 +101,24 @@ export class WcHome extends LitElement {
         });
     });
     this.requestUpdate();
+  }
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.hasSearch = false;
+    this.hasFaqs = false;
+    this.hasClientId = false;
+    this.routes = [];
+    this.route = "/";
+    this.selectedTicket = {};
+    this.selectedFaq = {};
+    this.shadowRoot?.removeEventListener("onSearch",()=>null)
+    this.shadowRoot?.removeEventListener("onClose",()=>null)
+    this.shadowRoot?.removeEventListener("onBack",()=>null)
+    this.shadowRoot?.removeEventListener("onSeeAll",()=>null)
+    this.shadowRoot?.removeEventListener("onRoute",()=>null)
+    this.shadowRoot?.removeEventListener("onFaqs",()=>null)
+    this.shadowRoot?.removeEventListener("chat-started",()=>null)
+    this.shadowRoot?.removeEventListener("onMessage",()=>null)
   }
   homeHeader() {
     return html`
@@ -112,7 +133,7 @@ export class WcHome extends LitElement {
     `;
   }
 
-  pageHeader() {    
+  pageHeader() {
     return html`
       <div class="page-header-container" style="background-color: ${this.bg};">
         <div class="page-header">
@@ -123,14 +144,14 @@ export class WcHome extends LitElement {
               [
                 "ticket",
                 () => html` <wc-agent-header
-                  agent="${JSON.stringify(this.selectedItem?.data?.agent)}"
+                  agent="${JSON.stringify(this.selectedTicket.data? this.selectedTicket.data.agent: this.selectedTicket.agent)}"
                 ></wc-agent-header>`,
               ],
               [
                 "view_ticket",
                 () =>
                   html`<wc-agent-header
-                    agent="${JSON.stringify(this.selectedItem?.data?.agent)}"
+                    agent="${JSON.stringify(this.selectedTicket?.data?.agent)}"
                   ></wc-agent-header>`,
               ],
             ],
@@ -166,8 +187,8 @@ export class WcHome extends LitElement {
     return html`
       <wc-view-faq
         id="${this.route}"
-        name="${this.selectedItem?.name}"
-        description="${this.selectedItem?.description}"
+        name="${this.selectedFaq?.data.name}"
+        description="${this.selectedFaq?.data.description}"
       />
     `;
   }
@@ -176,7 +197,7 @@ export class WcHome extends LitElement {
   }
   viewTicket() {
     return html`
-      <wc-thread ticket="${JSON.stringify(this.selectedItem)}"></wc-thread>
+      <wc-thread ticket="${JSON.stringify(this.selectedTicket)}"></wc-thread>
     `;
   }
   history() {
@@ -364,6 +385,10 @@ export class WcHome extends LitElement {
       display: grid;
       place-items: center;
       width: 100%;
+    }
+    .chat-header-logo img {
+      width: 100px;
+      object-fit: contain;
     }
     .chat-body {
       flex: 1;

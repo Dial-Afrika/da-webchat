@@ -34,6 +34,10 @@ class WcFaqs extends LitElement {
       });
     this.requestUpdate();
   }
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.faqs = [];
+  }
 
   handleSeeAll() {
     const onSeeAll = new CustomEvent("onSeeAll", {

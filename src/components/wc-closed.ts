@@ -29,10 +29,19 @@ export class WcClosed extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    setTimeout(() => {
-      this.showIntro = true;
-    }, 500);
+    if (!!!localStorage.getItem("clientId")) {
+      setTimeout(() => {
+        this.showIntro = true;
+      }, 3600);
+    }
     this.shadowRoot?.addEventListener("close-chat", () => {
+      this.showIntro = false;
+      this.requestUpdate();
+    });
+  }
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.shadowRoot?.removeEventListener("close-chat", () => {
       this.showIntro = false;
       this.requestUpdate();
     });

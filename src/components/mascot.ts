@@ -1,5 +1,5 @@
 import { consume } from "@lit-labs/context";
-import { LitElement, html, svg } from "lit";
+import { LitElement, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Colors, colorContext } from "../store/store-context";
 

@@ -34,7 +34,7 @@ class WcEditor extends LitElement {
         this.ticketId
       )
         .then((res: any) => {
-          console.log("message sent");
+          console.log("message sent", res);
           const onMessage = new CustomEvent("onMessage", {
             bubbles: true,
             composed: true,
@@ -46,16 +46,7 @@ class WcEditor extends LitElement {
           this.dispatchEvent(onMessage);
         })
         .catch((err: any) => {
-          console.log("message not sent");
-          const onMessage = new CustomEvent("onMessage", {
-            bubbles: true,
-            composed: true,
-            detail: {
-              status: "error",
-              data: err,
-            },
-          });
-          this.dispatchEvent(onMessage);
+          console.log("message not sent",err);
         });
     } else {
       initializeChat(`${this.state?.BASE_URL}`, `${this.state?.orgId}`, {
@@ -64,6 +55,7 @@ class WcEditor extends LitElement {
         ticketMessage: message,
       })
         .then((res: any) => {
+
           const onMessage = new CustomEvent("onMessage", {
             bubbles: true,
             composed: true,
@@ -73,9 +65,11 @@ class WcEditor extends LitElement {
                 created_at: res.createdAt,
                 updated_at: res.createdAt,
                 client: res.clientId,
+                ticketId: res.ticketId,
               },
             },
           });
+          this.ticketId = res.ticketId;
           this.dispatchEvent(onMessage);
         })
         .catch(() => {

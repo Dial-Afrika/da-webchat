@@ -2,7 +2,7 @@ import { LitElement, css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { map } from "lit/directives/map.js";
 import { Socket, io } from "socket.io-client";
-import { splitInfoAndLink } from "../functions/functions";
+import { sortArray, splitInfoAndLink } from "../functions/functions";
 import { Contact } from "../types/wc-types";
 import "./wc-message";
 import "./wc-ticket-form";
@@ -48,13 +48,13 @@ class WcThread extends LitElement {
       this.agent = data.agent.name;
       this.agentPrompt = data.message;
       this.ticketThread = [
-        ...this.ticketThread,
         {
           message: data.message,
           updated_at: data.agent.updated_at,
           direction: "info",
           agentId: data.agent.id,
         },
+        ...this.ticketThread,
       ];
     });
 
@@ -94,19 +94,6 @@ class WcThread extends LitElement {
       });
       this.clientId = localStorage.getItem("clientId") || "";
     });
-    this.shadowRoot?.addEventListener("onMessage", (e: any) => {
-      this.ticketThread = [
-        ...this.ticketThread,
-        {
-          message: e.detail.data.message,
-          updated_at: e.detail.data.created_at,
-          direction: "outgoing",
-          clientId: e.detail.data.clientId,
-        },
-      ];
-      this.requestUpdate();
-    });
-
     if (!!this._ticket) {
       this._ticket = JSON.parse(this._ticket)?.data;
       this.ticketId = this._ticket?.ticketId;
@@ -119,7 +106,34 @@ class WcThread extends LitElement {
         ...(this._ticket?.threads ?? []),
       ];
     }
+    this.shadowRoot?.addEventListener("onMessage", (e: any) => {
+      this.ticketThread = [
+        ...this.ticketThread,
+        {
+          message: e.detail.data.message,
+          updated_at: e.detail.data.created_at,
+          direction: "outgoing",
+          clientId: e.detail.data.clientId,
+        },
+      ];
+      this.ticketId = e.detail.data.ticketId ?? this.ticketId;
+      console.log("message resp", e.detail.data);
+
+      this.requestUpdate();
+    });
+
     this.requestUpdate();
+  }
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.socket?.disconnect();
+    this.user = {};
+    this.clientId = "";
+    this.ticketId = "";
+    this.ticketThread = [];
+    this.agent = null;
+    this.agentPrompt = "";
+    this._ticket = null;
   }
   protected render(): unknown {
     return html`
@@ -131,26 +145,19 @@ class WcThread extends LitElement {
           ></wc-message>
           <wc-ticket-form></wc-ticket-form>
           ${map(
-            this.ticketThread.sort((a, b) => {
-              if (a.updated_at < b.updated_at) {
-                return -1;
-              } else if (a.updated_at > b.updated_at) {
-                return 1;
-              } else {
-                return 0;
-              }
-            }),
+            sortArray(this.ticketThread, "updated_at", "asc"),
             (thread: any) => html`
               <wc-message
                 message="${thread.message}"
                 direction="${thread.direction
                   ? thread.direction
-                  : thread.agentId && thread.clientId
+                  : (thread.agentId && thread.clientId) ||
+                    thread.message.toLowerCase().includes("no live agents")
                   ? "info"
                   : thread.agentId
                   ? "incoming"
                   : "outgoing"}"
-                sender="${thread.agentId ? this._ticket?.agent : "You"}"
+                sender="${this._ticket?.agent ?? thread.sender}"
                 time="${thread.updated_at}"
               ></wc-message>
             `
