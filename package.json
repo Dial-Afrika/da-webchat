@@ -1,10 +1,11 @@
 {
   "name": "da-web-chat",
   "private": false,
-  "version": "2.1.1",
-  "main": "da-web-chat.es.js",
-  "module": "da-web-chat.es.js",
-  "types": "da-web-chat.d.ts",
+  "version": "2.1.2",
+  "description": "A web chat component for the Digital Assistant",
+  "main": "./dist/da-web-chat.js",
+  "module": "./dist/da-web-chat.js",
+  "types": "./dist/da-web-chat.d.ts",
   "files": [
     "dist",
     "types"
