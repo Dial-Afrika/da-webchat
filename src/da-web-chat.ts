@@ -18,8 +18,8 @@ import {
 
 @customElement("da-web-chat")
 export class DaWebChat extends LitElement {
-  @property({ type: String }) primarycolor = "teal";
-  @property({ type: String }) textcolor = "#FFFFFF";
+  @property({ type: String }) primarycolor = "";
+  @property({ type: String }) textcolor = "";
   @property() apikey = "";
 
   @state() greetings = "Hi";
@@ -112,8 +112,8 @@ export class DaWebChat extends LitElement {
                   <wc-svg>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="30"
-                      height="30"
+                      width="20"
+                      height="20"
                       viewBox="0 0 24 24"
                       fill="#ffffff"
                       class="feather feather-message-square"
@@ -155,8 +155,8 @@ export class DaWebChat extends LitElement {
               <wc-svg>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="30"
-                  height="30"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                   fill="#ffffff"
                   class="feather feather-message-square"
@@ -183,10 +183,39 @@ export class DaWebChat extends LitElement {
       flex-direction: column;
       align-items: flex-end;
       gap: 10px;
+      font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      font-weight: 400;
+      background-color: transparent;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-text-size-adjust: 100%;
+    }
+    hr {
+      opacity: 0.5 !important;
+      width: 0.5px !important;
+    }
+    
+    a {
+      font-weight: 500;
+      color: #646cff;
+      text-decoration: inherit;
+    }
+    a:hover {
+      color: #535bf2;
+    }
+    
+    @media (prefers-color-scheme: light) {
+      :root {
+        color: #213547;
+        background-color: #ffffff;
+      }
     }
     .toggle-button {
-      width: 80px;
-      height: 80px;
+      width: 50px;
+      height: 50px;
       background-color: #0b163f;
       color: white;
       border-radius: 50%;
@@ -197,8 +226,8 @@ export class DaWebChat extends LitElement {
     }
 
     .close-button {
-      width: 80px;
-      height: 80px;
+      width: 50px;
+      height: 50px;
       background-color: #f2f2f2;
       color: #535353;
       border-radius: 50%;

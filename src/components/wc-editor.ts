@@ -130,6 +130,7 @@ class WcEditor extends LitElement {
       border-radius: 5px;
       font-size: 12px;
       resize: none;
+      background-color: #f2f2f2;
     }
     .form textarea:focus {
       outline: none;

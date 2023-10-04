@@ -330,8 +330,8 @@ export class WcHome extends LitElement {
       gap: 10px;
     }
     .toggle-button {
-      width: 80px;
-      height: 80px;
+      width: 50px;
+      height: 50px;
       background-color: #0b163f;
       color: white;
       border-radius: 50%;
@@ -347,7 +347,7 @@ export class WcHome extends LitElement {
       background-color: #0b163f;
       padding: 20px;
       border-radius: 20px 20px 0 0;
-      height: 250px;
+      max-height: 250px;
       display: flex;
       flex-direction: column;
     }
@@ -431,6 +431,8 @@ export class WcHome extends LitElement {
       display: flex;
       flex-direction: column;
       gap: 10px;
+      overflow-y: scroll;
+      overflow-x: hidden;
     }
     .chat-padding {
       flex: 1;
@@ -442,11 +444,45 @@ export class WcHome extends LitElement {
     .chat-container {
       width: 350px;
       background-color: white;
-      border: 1px solid #d2d2d2;
+      border: none;
       border-radius: 21px;
       display: flex;
       flex-direction: column;
       min-height: 500px;
+      max-height: 70vh;
+    }
+    /* Laptop */
+    @media only screen and (min-width: 1024px) {
+      .chat-container {
+        width: 350px;
+        min-width: 350px
+        max-height: 80vh;
+      }
+    }
+
+    /* Tablet */
+    @media only screen and (min-width: 768px) and (max-width: 1023px) {
+      .chat-container {
+        width: 400px;
+        min-width: 400px
+        max-height: 70vh;
+      }
+    }
+
+    /* Mobile */
+    @media only screen and (min-width: 250px) and (max-width: 767px) {
+      .chat-container {
+        width: 100%;
+        min-width: 100%;
+        max-height: 60vh;
+        border-radius: 0;
+      }
+      :host {
+        bottom: 10px;
+        right: 0;
+        padding: 0 10px;
+        min-width:80%;
+      }
     }
     .chat-header-search {
       display: grid;
@@ -498,6 +534,7 @@ export class WcHome extends LitElement {
       border: 1px solid #d2d2d2;
       padding: 10px;
       outline: none;
+      background-color: #f2f2f2;
     }
     .chat-button {
       display: grid;
