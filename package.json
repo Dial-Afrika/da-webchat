@@ -1,7 +1,7 @@
 {
   "name": "da-web-chat",
   "private": false,
-  "version": "2.1.6",
+  "version": "2.1.7",
   "description": "A web chat component for the Digital Assistant",
   "main": "./dist/da-web-chat.js",
   "module": "./dist/da-web-chat.js",
