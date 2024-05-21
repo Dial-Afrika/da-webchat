@@ -93,13 +93,12 @@ export class WcTicketForm extends LitElement {
         }
       )
         .then((res) => {
-          console.log(res);
           localStorage.setItem("ticketId", res?.ticketId);
           localStorage.setItem("clientId", res?.clientId);
           this.clientId = res?.clientId;
         })
         .catch((err) => {
-          console.log(err);
+          console.warn(err);
         })
         .finally(() => {
           const event = new CustomEvent("chat-started", {

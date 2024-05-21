@@ -2,6 +2,7 @@ import { consume } from "@lit-labs/context";
 import { LitElement, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Colors, colorContext } from "../store/store-context";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 @customElement("wc-view-faq")
 class WcViewFaq extends LitElement {
@@ -16,7 +17,9 @@ class WcViewFaq extends LitElement {
       <div class="name" style="color: ${this.colors?.primarycolor}">
         ${this.name}
       </div>
-      <div class="description">${this.description}</div>
+      <div class="description">
+      ${unsafeHTML(this.description)}
+    </div>
     </div>`;
   }
   static styles = css`

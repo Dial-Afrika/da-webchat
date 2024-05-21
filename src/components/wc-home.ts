@@ -70,7 +70,6 @@ export class WcHome extends LitElement {
       let { route, page, ...rest } = e.detail;
       this.route = route;
       this.page = page;
-      console.log("onRoute", e.detail);
 
       if (page === "faq") this.selectedFaq = { ...rest };
       if (page === "view_ticket") this.selectedTicket = { ...rest };
@@ -173,7 +172,7 @@ export class WcHome extends LitElement {
     return html`
       <wc-view-faq
         id="${this.route}"
-        name="${this.selectedFaq?.data.name}"
+        name="${this.selectedFaq?.data?.name}"
         description="${this.selectedFaq?.data.description}"
       />
     `;
@@ -444,7 +443,7 @@ export class WcHome extends LitElement {
     .chat-container {
       width: 350px;
       background-color: white;
-      border: none;
+      border: 1px solid #d2d2d2;
       border-radius: 21px;
       display: flex;
       flex-direction: column;

@@ -96,6 +96,7 @@ class WcThread extends LitElement {
     });
     if (!!this._ticket) {
       this._ticket = JSON.parse(this._ticket)?.data;
+      console.log("thread", this._ticket?.threads);
       this.ticketId = this._ticket?.id;
       this.ticketThread = [
         {
@@ -117,8 +118,6 @@ class WcThread extends LitElement {
         },
       ];
       this.ticketId = e.detail.data.ticketId ?? this.ticketId;
-      console.log("message resp", e.detail.data);
-
       this.requestUpdate();
     });
 
@@ -149,6 +148,9 @@ class WcThread extends LitElement {
             (thread: any) => html`
               <wc-message
                 message="${thread.message}"
+                attachments="${(thread.attachments ?? []).forEach(
+                  (a: any) => a.path
+                )}"
                 direction="${thread.direction
                   ? thread.direction
                   : (thread.agentId && thread.clientId) ||
@@ -159,7 +161,21 @@ class WcThread extends LitElement {
                   : "outgoing"}"
                 sender="${this._ticket?.agent ?? thread.sender}"
                 time="${thread.updated_at}"
-              ></wc-message>
+              >
+                <div slot="atachments">
+                ${map(thread.attachments, (attachment:any) => {
+                  console.log(attachment);
+                  return html`
+                    <img
+                      src="${attachment?.path}"
+                      alt="${attachment?.id}"
+                      class="attachment"
+                      onclick="window.open('${attachment?.path}', '_blank')"
+                    />
+                  `;
+                })}
+                </div>
+              </wc-message>
             `
           )}
         </div>
@@ -203,6 +219,13 @@ class WcThread extends LitElement {
       font-weight: normal;
       text-align: center;
       color: inherit;
+    }
+    .attachment {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 5px;
+      margin: 5px 0;
     }
   `;
 }

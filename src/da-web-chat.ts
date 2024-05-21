@@ -20,11 +20,12 @@ import {
 export class DaWebChat extends LitElement {
   @property({ type: String }) primarycolor = "";
   @property({ type: String }) textcolor = "";
-  @property() apikey = "";
+  @property({ type: String }) apikey = "";
+  @property({ type: String }) secret = "";
 
   @state() greetings = "Hi";
   @state() BASE_URL = "https://chatdesk-prod.dialafrika.com/";
-  @state() ID_URL = "https://apiprod.dialafrika.com/organisation/";
+  @state() ID_URL = "https://api.dialafrika.com/api/v1/organisations/";
   @state() organizationId = "";
   @state() newprimarycolor: string = this.primarycolor;
   @state() orgName: string = "";
@@ -49,10 +50,10 @@ export class DaWebChat extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     this.colors = new Colors().setColors(this.primarycolor, this.textcolor);
-    getOrg(this.ID_URL, this.apikey)
+    getOrg(this.ID_URL, this.apikey, this.secret)
       .then((res: any) => {
-        this.organizationId = res?.id;
-        this.orgName = res?.name;
+        this.organizationId = res?.organisation.id;
+        this.orgName = res?.organisation.name;
       })
       .then(() => {
         getPrompt(this.BASE_URL, this.organizationId).then((res) => {

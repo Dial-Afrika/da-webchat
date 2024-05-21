@@ -31,7 +31,7 @@ export class WcTicketHistory extends LitElement {
         this.requestUpdate();
       })
       .catch((err: any) => {
-        console.log("tickets not fetched", err);
+        console.warn(err);
       });
   }
 

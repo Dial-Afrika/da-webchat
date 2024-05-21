@@ -3,7 +3,7 @@ import { LitElement, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { getMoment, splitInfoAndLink } from "../functions/functions";
 import { Colors, colorContext } from "../store/store-context";
-import './wc-svg';
+import "./wc-svg";
 @customElement("wc-message")
 export class WcMessage extends LitElement {
   @property({ type: String }) direction = "incoming";
@@ -31,6 +31,7 @@ export class WcMessage extends LitElement {
           class="chat-message"
           style="background-color: #f2f2f2; color: #484848"
         >
+          <slot name="atachments"></slot>
           <p>${this.message}</p>
           <slot name="children"></slot>
           <p class="time">${getMoment(this.time)}</p>
@@ -49,6 +50,7 @@ export class WcMessage extends LitElement {
           color: #2C2C2C;
           "
         >
+          <slot name="atachments"></slot>
           <p>${this.message}</p>
           <slot name="children"></slot>
           <p class="time">${getMoment(this.time)}</p>
@@ -160,24 +162,24 @@ export class WcMessage extends LitElement {
       background-color: #f2f2f2;
       border: 1px solid #d2d2d2;
     }
-    .user-avatar{
+    .user-avatar {
       width: 20px;
       height: 20px;
       border-radius: 50%;
       overflow: hidden;
       border: 1px solid #d2d2d2;
-      display:grid;
-      place-items:center;
+      display: grid;
+      place-items: center;
     }
-    .sender{
+    .sender {
       display: flex;
       flex-direction: row nowrap;
       justify-content: flex-start;
       align-items: center;
       gap: 5px;
     }
-    .user{
-      flex-flow:row-reverse nowrap;
+    .user {
+      flex-flow: row-reverse nowrap;
     }
     .sender p.sender-name {
       font-size: 10px;
@@ -186,7 +188,7 @@ export class WcMessage extends LitElement {
       margin: 0;
       text-transform: capitalize;
     }
-    .chat-message> p.time {
+    .chat-message > p.time {
       font-size: 10px;
       color: #535353;
       font-weight: 300;
@@ -194,6 +196,11 @@ export class WcMessage extends LitElement {
       width: 100%;
       text-align: right;
     }
-    .
   `;
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "wc-message": WcMessage;
+  }
 }

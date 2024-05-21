@@ -20,9 +20,14 @@ export const searchFaqs = async (
   return res.data.data;
 };
 
-export const getOrg = async (ID_URL: string, apikey: string) => {
+export const getOrg = async (ID_URL: string, apikey: string, secret:string) => {
   if (!apikey) return {};
-  const res = await axios.get(`${ID_URL}${apikey}/`);
+  const res = await axios.get(`${ID_URL}`, {
+    headers: {
+      ApiKey: `${apikey}`,
+      Secret: `${secret}`,
+    },
+  });
   return res.data;
 };
 

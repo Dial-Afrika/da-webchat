@@ -3,7 +3,6 @@ import { LitElement, PropertyValueMap, css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { initializeChat, sendMessage } from "../functions/functions";
 import {
-  Colors,
   StateType,
   colorContext,
   stateContext,
@@ -15,7 +14,6 @@ class WcEditor extends LitElement {
   @state() inputRef: HTMLTextAreaElement | null = null;
 
   @consume({ context: colorContext, subscribe: true })
-  private colors!: Colors;
 
   @consume({ context: stateContext, subscribe: true })
   private state!: StateType;
@@ -35,7 +33,6 @@ class WcEditor extends LitElement {
           : localStorage.getItem("ticketId") ?? ""
       )
         .then((res: any) => {
-          console.log("message sent", res);
           const onMessage = new CustomEvent("onMessage", {
             bubbles: true,
             composed: true,
@@ -47,7 +44,7 @@ class WcEditor extends LitElement {
           this.dispatchEvent(onMessage);
         })
         .catch((err: any) => {
-          console.log("message not sent", err);
+          console.warn("message not sent", err);
         });
     } else {
       initializeChat(`${this.state?.BASE_URL}`, `${this.state?.orgId}`, {
@@ -73,7 +70,7 @@ class WcEditor extends LitElement {
           this.dispatchEvent(onMessage);
         })
         .catch(() => {
-          console.log("message not sent");
+          console.warn("message not sent");
         });
     }
   }
@@ -98,15 +95,30 @@ class WcEditor extends LitElement {
               placeholder="Write us a message"
               required
             ></textarea>
-            <div class="button-container">
+            
               <button
                 type="submit"
-                style="background-color:${this.colors
-                  .primarycolor}; color: #fff;"
+                style="background-color:transparent; color: #fff;"
               >
-                Send Message
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon icon-tabler icon-tabler-send-2"
+                  width="18"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="#2c3e50"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    d="M4.698 4.034l16.302 7.966l-16.302 7.966a.503 .503 0 0 1 -.546 -.124a.555 .555 0 0 1 -.12 -.568l2.468 -7.274l-2.468 -7.274a.555 .555 0 0 1 .12 -.568a.503 .503 0 0 1 .546 -.124z"
+                  />
+                  <path d="M6.5 12h14.5" />
+                </svg>
               </button>
-            </div>
           </form>
         </div>
       </div>
@@ -117,7 +129,7 @@ class WcEditor extends LitElement {
     }
     .form {
       display: flex;
-      flex-direction: column;
+      flex-direction: row nowrap;
       justify-content: flex-start;
       align-items: stretch;
       gap: 10px;
@@ -125,23 +137,16 @@ class WcEditor extends LitElement {
       border-top: 1px solid #d2d2d2;
     }
     .form textarea {
+      flex-grow: 1;
       padding: 8px 16px;
       border: none;
       border-radius: 5px;
       font-size: 12px;
       resize: none;
-      background-color: #f2f2f2;
+      background-color: #ffffff;
     }
     .form textarea:focus {
       outline: none;
-    }
-    .button-container {
-      display: flex;
-      flex-direction: row nowrap;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 10px;
-      padding: 0px 10px;
     }
     button {
       height: 30px;
