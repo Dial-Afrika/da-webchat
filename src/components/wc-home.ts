@@ -50,6 +50,18 @@ export class WcHome extends LitElement {
     this.page = page;
     this.route = route;
   }
+
+  private handleTalkToUs() {
+    this.setPage("ticket", "new_ticket");
+    this.stackRoutes("ticket");
+    this.addPageToState("ticket", "new_ticket");
+  }
+
+  private addPageToState(page: string, route: string) {
+    this.state.page = page;
+    this.state.route = route;
+  }
+
   connectedCallback(): void {
     super.connectedCallback();
     this.shadowRoot?.addEventListener("onSearch", () => {
@@ -231,7 +243,7 @@ export class WcHome extends LitElement {
           <button
             class="start-chat"
             style="background-color: ${this.bg};"
-            @click="${() => this.setPage("ticket", "")}"
+            @click="${this.handleTalkToUs}"
           >
             <wc-svg
               width="15"
@@ -328,6 +340,9 @@ export class WcHome extends LitElement {
       align-items: flex-end;
       gap: 10px;
     }
+
+    
+    /* Chat */
     .toggle-button {
       width: 50px;
       height: 50px;
@@ -458,6 +473,7 @@ export class WcHome extends LitElement {
         max-height: 80vh;
       }
     }
+    
 
     /* Tablet */
     @media only screen and (min-width: 768px) and (max-width: 1023px) {

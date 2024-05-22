@@ -18,6 +18,7 @@ class WcThread extends LitElement {
   @state() ticketId: string = "";
   @state() agent: any = null;
   @state() agentPrompt: string = "";
+  @state() bottomRef: HTMLDivElement | null = null;
 
   ioOptions = {
     transports: ["websocket"],
@@ -31,6 +32,7 @@ class WcThread extends LitElement {
 
     this.socket.on("connect", () => {
       localStorage.setItem("socketId", this.socket?.id || "");
+
     });
 
     this.socket.on("no_agent_found", (data: any) => {
@@ -84,9 +86,14 @@ class WcThread extends LitElement {
       ];
     });
   }
+    // scroll to bottom on new message by scrolling bottom ref into view
+    scrollToBottom() {
+      this.bottomRef?.scrollIntoView({ behavior: "smooth" });
+    }
 
   connectedCallback(): void {
     super.connectedCallback();
+    this.bottomRef?.scrollIntoView({ behavior: "smooth" });
     this.shadowRoot?.addEventListener("chat-started", (e: any) => {
       this.user = e.detail;
       Object.keys(e.detail).forEach((key) => {
@@ -96,7 +103,6 @@ class WcThread extends LitElement {
     });
     if (!!this._ticket) {
       this._ticket = JSON.parse(this._ticket)?.data;
-      console.log("thread", this._ticket?.threads);
       this.ticketId = this._ticket?.id;
       this.ticketThread = [
         {
@@ -112,17 +118,23 @@ class WcThread extends LitElement {
         ...this.ticketThread,
         {
           message: e.detail.data.message,
+          attachments: e.detail.data.attachments,
           updated_at: e.detail.data.created_at,
           direction: "outgoing",
           clientId: e.detail.data.clientId,
         },
       ];
       this.ticketId = e.detail.data.ticketId ?? this.ticketId;
+      this.scrollToBottom();
       this.requestUpdate();
     });
 
     this.requestUpdate();
   }
+
+
+
+
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this.socket?.disconnect();
@@ -164,7 +176,6 @@ class WcThread extends LitElement {
               >
                 <div slot="atachments">
                 ${map(thread.attachments, (attachment:any) => {
-                  console.log(attachment);
                   return html`
                     <img
                       src="${attachment?.path}"
@@ -178,6 +189,7 @@ class WcThread extends LitElement {
               </wc-message>
             `
           )}
+          <div .ref="${this.bottomRef}" ></div>
         </div>
       </div>
       <wc-editor ticketId="${this._ticket?.id ?? undefined}"></wc-editor>

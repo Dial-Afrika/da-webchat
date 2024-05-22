@@ -11,6 +11,7 @@ import {
 @customElement("wc-agent-header")
 export class WcAgentHeader extends LitElement {
   @property({ type: Object }) agent: { [key: string]: any } = {};
+  
   @consume({ context: colorContext, subscribe: true })
   private colors!: Colors;
 

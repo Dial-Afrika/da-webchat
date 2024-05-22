@@ -1,8 +1,8 @@
 {
   "name": "da-web-chat",
   "private": false,
-  "version": "2.1.9",
-  "description": "A web chat component for the Digital Assistant",
+  "version": "3.0.0",
+  "description": "A web chat component for a web chatbot that enables bonga chatdesk integration to websites",
   "main": "./dist/da-web-chat.js",
   "module": "./dist/da-web-chat.js",
   "types": "./dist/da-web-chat.d.ts",

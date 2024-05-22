@@ -20,7 +20,11 @@ export const searchFaqs = async (
   return res.data.data;
 };
 
-export const getOrg = async (ID_URL: string, apikey: string, secret:string) => {
+export const getOrg = async (
+  ID_URL: string,
+  apikey: string,
+  secret: string
+) => {
   if (!apikey) return {};
   const res = await axios.get(`${ID_URL}`, {
     headers: {
@@ -41,7 +45,7 @@ export const getPrompt = async (BASE_URL: string, orgId: string) => {
 export const initializeChat = async (
   BASE_URL: string,
   orgId: string,
-  data: { [key: string]: string }
+  data: { [key: string]: any }
 ) => {
   const res = await axios.post(
     `${BASE_URL}webchat/initialize-livechat/${
@@ -56,15 +60,17 @@ export const sendMessage = async (
   BASE_URL: string,
   orgId: string,
   threadMessage: string,
+  attachmentIds: string[],
   ticketId: string
 ) => {
   const res = await axios.post(
-    `${BASE_URL}webchat/ticket-thread/?organizationId=${orgId}`,
+    `${BASE_URL}webchat/${ticketId? "ticket-thread":"ticket"}/?organizationId=${orgId}`,
     {
       clientId: localStorage.getItem("clientId") ?? "",
       ticketId: ticketId ?? "",
       socketId: localStorage.getItem("socketId") ?? "",
       threadMessage: threadMessage,
+      attachments: attachmentIds,
     }
   );
   return res.data.data;
@@ -156,5 +162,25 @@ export function getLastMessage(threads: any[]) {
       !thread.message.toLowerCase().includes("no live agents")
   );
   threads = sortArray(threads, "created_at", "asc");
-  return threads[threads.length - 1]??undefined;
+  return threads[threads.length - 1] ?? undefined;
+}
+
+export async function postAttachments(
+  BASE_URL: string,
+  orgId: string,
+  files: File[]
+): Promise<string[]> {
+  if (files.length === 0) return [];
+  let attachmentIds: string[] = [];
+  for (let i = 0; i < files.length; i++) {
+    const formData = new FormData();
+    formData.append("file", files[i]);
+    const res = await axios.post(
+      `${BASE_URL}webchat/attachments/upload/?organizationId=${orgId}`,
+      formData
+    );
+    attachmentIds.push(res.data.data.id);
+  }
+  console.log("attachmentIds", attachmentIds);
+  return attachmentIds;
 }

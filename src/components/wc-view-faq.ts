@@ -12,6 +12,7 @@ class WcViewFaq extends LitElement {
 
   @consume({ context: colorContext, subscribe: true })
   private colors?: Colors;
+  
   protected render(): unknown {
     return html`<div class="container">
       <div class="name" style="color: ${this.colors?.primarycolor}">
