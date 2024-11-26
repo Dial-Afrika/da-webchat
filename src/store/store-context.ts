@@ -41,6 +41,7 @@ export interface StateType {
   orgId: string;
   page?: string;
   route?: string;
+  ticketId?: string;
 }
 export class State {
   public promptMessage: string;
@@ -51,6 +52,7 @@ export class State {
   public orgId = "";
   public page?: string;
   public route?: string;
+  public ticketId?: string;
   constructor(state: StateType) {
     this.promptMessage = state.promptMessage;
     this.hasPrompted = state.hasPrompted;
@@ -58,6 +60,7 @@ export class State {
     this.orgId = state.orgId;
     this.page = state.page ?? "";
     this.route = state.route ?? "";
+    this.ticketId = state.ticketId ?? "";
   }
 }
 

@@ -64,7 +64,9 @@ export const sendMessage = async (
   ticketId: string
 ) => {
   const res = await axios.post(
-    `${BASE_URL}webchat/${ticketId? "ticket-thread":"ticket"}/?organizationId=${orgId}`,
+    `${BASE_URL}webchat/${
+      ticketId ? "ticket-thread" : "ticket"
+    }/?organizationId=${orgId}`,
     {
       clientId: localStorage.getItem("clientId") ?? "",
       ticketId: ticketId ?? "",
@@ -78,7 +80,8 @@ export const sendMessage = async (
 
 export const getTickets = async (BASE_URL: string, orgId?: string) => {
   let clientID = localStorage.getItem("clientId");
-  if (!orgId && !clientID) return [];
+  if (clientID === "" || clientID === undefined || clientID === null) return [];
+  if (!orgId) return [];
   const res = await axios.get(
     `${BASE_URL}webchat/client-tickets/?organizationId=${orgId}&clientId=${localStorage.getItem(
       "clientId"

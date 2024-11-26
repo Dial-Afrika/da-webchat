@@ -58,31 +58,42 @@ export class WcTicketHistory extends LitElement {
     return html`
       <div class="ticket-container">
         <div class="ticket-threads" id="thread">
-          ${map(
-            sortArray(this.tickets, "updated_at", "desc"),
-            (ticket: any) => html`
-              <div class="ticket" @click=${() => this.handleViewTicket(ticket)}>
-                <div class="ticket-avatar">
-                  <wc-avatar avatar=${ticket.agent ?? "Agent"}></wc-avatar>
+          ${this.tickets.length
+            ? map(
+                sortArray(this.tickets, "updated_at", "desc"),
+                (ticket: any) => html`
+                  <div
+                    class="ticket"
+                    @click=${() => this.handleViewTicket(ticket)}
+                  >
+                    <div class="ticket-avatar">
+                      <wc-avatar avatar=${ticket.agent ?? "Agent"}></wc-avatar>
+                    </div>
+                    <div class="ticket-details">
+                      <p class="ticket-subject">
+                        ${truncateString(
+                          getLastMessage(ticket.threads)?.message ??
+                            ticket.subject,
+                          40
+                        )}
+                      </p>
+                      <p class="ticket-date">
+                        ${getMoment(
+                          sortArray(ticket.threads, "created_at", "asc")[
+                            ticket.threads.length - 1
+                          ].updated_at
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                `
+              )
+            : html`
+                <div class="no-tickets">
+                  <h3>No tickets available</h3>
+                  <p>Start a new conversation to create a ticket</p>
                 </div>
-                <div class="ticket-details">
-                  <p class="ticket-subject">
-                    ${truncateString(
-                      getLastMessage(ticket.threads)?.message ?? ticket.subject,
-                      40
-                    )}
-                  </p>
-                  <p class="ticket-date">
-                    ${getMoment(
-                      sortArray(ticket.threads, "created_at", "asc")[
-                        ticket.threads.length - 1
-                      ].updated_at
-                    )}
-                  </p>
-                </div>
-              </div>
-            `
-          )}
+              `}
         </div>
       </div>
     `;
@@ -150,6 +161,25 @@ export class WcTicketHistory extends LitElement {
       font-weight: 300;
       color: #6f6f6f;
     }
+    .no-tickets {
+      display: grid;
+      place-items: center;
+      height: 100%;
+      width: 100%;
+      padding: 2rem 1rem;
+    }
+      .no-tickets h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #3a3a3a;
+        line-height: 1.5;
+        margin: 0;
+      }
+      .no-tickets p {
+        font-size: 1rem;
+        font-weight: 300;
+        color: #6f6f6f;
+      }
   `;
 }
 
