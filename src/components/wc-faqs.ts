@@ -65,7 +65,7 @@ class WcFaqs extends LitElement {
         style="overflow-y:${this.less ? "hidden" : "scroll"}"
       >
         ${map(
-          [...(this.faqs.length===0? JSON.parse(localStorage.getItem("faqs") || "[]"):this.faqs).slice(0, this.less ? 3 : this.faqs.length)],
+          [...(JSON.parse(localStorage.getItem("faqs") || "")||this.faqs.slice(0, this.less ? 3 : this.faqs.length))],
           (result: Result) =>
             html`
               <div
